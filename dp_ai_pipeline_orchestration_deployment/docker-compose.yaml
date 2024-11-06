@@ -1,0 +1,93 @@
+version: '3.8'
+services:
+  mlflow:
+    image: mlflow_server
+    build:
+      context: .
+      dockerfile: MLflow
+    container_name: mlflow_toolbox
+    env_file:
+      - ./envs/mlflow.env
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+    networks:
+      - shared_network
+    restart: on-failure
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres_toolbox
+    env_file:
+      - ./envs/postgres.env
+    ports:
+      - "10100:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - shared_network
+    restart: on-failure
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio_toolbox
+    env_file:
+      - ./envs/minio.env
+    networks:
+      - shared_network
+    volumes:
+      - minio-data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+
+  magic:
+    image: mageai/mageai:latest
+    command: mage start ${PROJECT_NAME}
+    env_file:
+      - ./envs/mage.env
+    build:
+      context: .
+      dockerfile: MageAI
+    container_name: mage_toolbox
+    environment:
+      USER_CODE_PATH: /home/src/${PROJECT_NAME}
+      ENV: ${ENV}
+    ports:
+      - 6789:6789
+    volumes:
+      - ./mage:/home/src/default_repo
+    networks:
+      - shared_network
+    restart: on-failure:5
+  
+  mageapi:
+    image: ghcr.io/jarcaucristian/mage-api:latest
+    env_file:
+      - ./envs/mageapi.env
+    container_name: mage_api_toolbox
+    ports:
+      - 8000:8000
+    networks:
+      - shared_network
+    restart: on-failure:5
+
+  orchestrator:
+    image: ghcr.io/daniels01ss/orchestrator:latest
+    env_file:
+      - ./envs/orchestrator.env
+    container_name: orchestrator_toolbox
+    ports:
+      - 3000:3000
+    networks:
+      - shared_network
+    restart: on-failure:5
+
+networks:
+  shared_network:
+
+volumes:
+  minio-data:
+    driver: local
