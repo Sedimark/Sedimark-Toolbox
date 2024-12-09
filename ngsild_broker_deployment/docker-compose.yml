@@ -44,6 +44,8 @@ services:
     image: stellio/stellio-api-gateway:${STELLIO_DOCKER_TAG}
     environment:
       - SPRING_PROFILES_ACTIVE=${ENVIRONMENT}
+    networks:
+      - shared_network
     ports:
       - "${API_GATEWAY_PORT:-8080}:8080"
   search-service:
@@ -94,6 +96,10 @@ services:
         condition: service_healthy
       kafka:
         condition: service_started
+
+networks:
+  shared_network:
+    external: true
 
 volumes:
   stellio-postgres-storage:

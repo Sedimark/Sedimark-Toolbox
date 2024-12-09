@@ -62,7 +62,7 @@ services:
     networks:
       - shared_network
     restart: on-failure:5
-  
+
   mageapi:
     image: ghcr.io/jarcaucristian/mage-api:latest
     env_file:
@@ -87,6 +87,7 @@ services:
 
 networks:
   shared_network:
+    external: true
 
 volumes:
   minio-data:

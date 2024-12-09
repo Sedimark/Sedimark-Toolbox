@@ -1,5 +1,5 @@
-import requests
 import json
+import requests
 import numpy as np
 import pandas as pd
 from functools import reduce
@@ -10,34 +10,8 @@ from .processing_model import ProcessingStep
 
 class DataStore_NGSILD(DataStore):
     """A DataStore in a NGSI-LD broker"""
-    def __init__(self, host, url_keycloak):
+    def __init__(self, host):
         self.host = host
-        self.url_keycloak = url_keycloak
-
-    def getToken(self, client_id, client_secret, username=None, password=None):
-        """Retrieve a token from keycloak, to able to interact with the context broker"""
-        headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        if (username is None) or (password is None):
-            data = {
-                'client_id': client_id,
-                'client_secret': client_secret,
-                'grant_type': 'client_credentials'
-                }
-        else:
-            data = {
-                'client_id': client_id,
-                'client_secret': client_secret,
-                'username': username,
-                'password': password,
-                'grant_type': 'password'
-                }
-        r = requests.post(self.url_keycloak, data=data, headers=headers)
-        if r.status_code != 200:
-            raise Exception(r.json())
-        self.token = r.json()['access_token']
 
 
 class LoadData_NGSILD(ProcessingStep):
@@ -48,12 +22,10 @@ class LoadData_NGSILD(ProcessingStep):
         self.data_store = data_store
         if tenant is None:
             self.headers = {
-                'Authorization': 'Bearer ' + data_store.token,
                 'Link': f'<{context}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
                 }
         else:
             self.headers = {
-                'Authorization': 'Bearer ' + data_store.token,
                 'Link': f'<{context}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"',
                 'NGSILD-Tenant': tenant
                 }
@@ -145,12 +117,10 @@ class SaveData_NGSILD(ProcessingStep):
         self.data_store = data_store
         if tenant is None:
             self.headers = {
-                'Authorization': 'Bearer ' + data_store.token,
                 'Link': f'<{context}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
                 }
         else:
             self.headers = {
-                'Authorization': 'Bearer ' + data_store.token,
                 'Link': f'<{context}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"',
                 'NGSILD-Tenant': tenant
                 }
@@ -260,7 +230,7 @@ class SaveData_NGSILD(ProcessingStep):
                             instances.append({"type": "Property", "value": self.np_encode(value), "observedAt": ind})
                 if isinstance(bucket['processed_contextual_data'][attrs], dict):
                     missing_sub_property = [{item[0]: item[1]} for item in bucket['processed_contextual_data'][attrs].items() if item[0] not in ['type', 'value', 'observedAt']]
-                    
+
                 for instance in instances:
                     for item in missing_sub_property:
                         instance.update(item)
@@ -294,7 +264,7 @@ class SaveData_NGSILD(ProcessingStep):
                     payload.update({attrs: instances})
                 else:
                     payload[attrs] += instances
-        
+
         for col in bucket['processed_temporal_data'].columns:
             if ' # ' not in col and ' $ ' in col:
                 attrs = col.split(' $ ')[0]
