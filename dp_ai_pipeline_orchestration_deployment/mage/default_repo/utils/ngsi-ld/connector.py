@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 from functools import reduce
 from deepdiff import DeepDiff
-from .data_model import DataStore
-from .processing_model import ProcessingStep
+from default_repo.utils.ngsi_ld.data_model import DataStore
+from default_repo.utils.ngsi_ld.processing_model import ProcessingStep
 
 
 class DataStore_NGSILD(DataStore):
@@ -335,6 +335,7 @@ class SaveData_NGSILD(ProcessingStep):
         self.check_if_entity_exists(bucket)
         self.create_contextual_payload(bucket)
         self.create_temporal_payload(bucket)
+
         # If the payload is not empty, update the contextual data
         if bucket['contextual_payload'] != {}:
             self.post_contextual_data(bucket)
