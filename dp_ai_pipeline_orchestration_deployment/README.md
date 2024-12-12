@@ -68,11 +68,15 @@ This Docker Compose setup defines a multi-service environment with components fo
 ## Usage
 
 1. **Environment Variables**: All `.env` files in `./envs/` are preconfigured and the deployment can be dones as is
-2. **Starting Services**: Run the following command to build and start all services:
+2. **Create Shared Network**: 
+   ```bash
+   docker network create shared_network
+   ```
+3. **Starting Services**: Run the following command to build and start all services:
    ```bash
    docker-compose up -d
    ```
-3. **Accessing Services**:
+4. **Accessing Services**:
    - **MLflow**: http://localhost:5000
    - **PostgreSQL**: Exposed on localhost at port `10100`.
    - **MinIO Console**: http://localhost:9001
@@ -80,11 +84,11 @@ This Docker Compose setup defines a multi-service environment with components fo
    - **Mage API**: http://localhost:8000
    - **Orchestrator**: http://localhost:3000
 
-4. **Stopping Services**: Use the following to stop and remove containers:
+5. **Stopping Services**: Use the following to stop and remove containers:
    ```bash
    docker-compose down
    ```
-5. **Viewing Logs**:
+6. **Viewing Logs**:
    ```bash
    docker-compose logs -f
    ```
