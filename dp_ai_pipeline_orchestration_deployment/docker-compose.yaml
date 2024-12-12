@@ -1,7 +1,6 @@
 version: '3.8'
 services:
   mlflow:
-    image: mlflow_server
     build:
       context: .
       dockerfile: MLflow
@@ -64,7 +63,7 @@ services:
     restart: on-failure:5
 
   mageapi:
-    image: scr4pp/mageai
+    image: scr4pp/mageapi
     env_file:
       - ./envs/mageapi.env
     container_name: mage_api_toolbox
