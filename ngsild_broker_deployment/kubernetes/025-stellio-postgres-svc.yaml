@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ${STELLIO_APP_NAME}-postgres
+  name: ${STELLIO_APP_NAME}-postgres
+  namespace: ${STELLIO_NAMESPACE}
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: ${STELLIO_APP_NAME}-postgres
+---
+

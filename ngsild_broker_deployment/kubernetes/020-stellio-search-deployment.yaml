@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ${STELLIO_APP_NAME}-search
+  name: ${STELLIO_APP_NAME}-search
+  namespace: ${STELLIO_NAMESPACE}
+spec:
+  selector:
+    matchLabels:
+      app: ${STELLIO_APP_NAME}-search
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ${STELLIO_APP_NAME}-search
+    spec:
+      nodeSelector: {}
+      containers:
+        - image: stellio/stellio-search-service:${STELLIO_SEARCH_IMAGETAG}
+          imagePullPolicy: IfNotPresent
+          name: ${STELLIO_APP_NAME}-search
+          resources: {}
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: SPRING_PROFILES_ACTIVE
+            - name: STELLIO_SEARCH_DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: STELLIO_SEARCH_DB_DATABASE
+            - name: SPRING_R2DBC_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ${STELLIO_APP_NAME}-secret
+                  key: POSTGRES_USER
+            - name: SPRING_R2DBC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${STELLIO_APP_NAME}-secret
+                  key: POSTGRES_PASS
+            - name: SPRING_KAFKA_BOOTSTRAP-SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: KAFKA_URL
+            - name: APPLICATION_AUTHENTICATION_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: APPLICATION_AUTHENTICATION_ENABLED
+            - name: APPLICATION_TENANTS_0_ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: APPLICATION_TENANTS_0_ISSUER
+            - name: APPLICATION_TENANTS_0_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: APPLICATION_TENANTS_0_NAME
+            - name: APPLICATION_TENANTS_0_DBSCHEMA
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: APPLICATION_TENANTS_0_DBSCHEMA
+            - name: APPLICATION_PAGINATION_LIMIT-DEFAULT
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: APPLICATION_PAGINATION_LIMIT-DEFAULT
+            - name: APPLICATION_PAGINATION_LIMIT-MAX
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: APPLICATION_PAGINATION_LIMIT-MAX
+            - name: APPLICATION_PAGINATION_TEMPORAL-LIMIT
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: APPLICATION_PAGINATION_TEMPORAL-LIMIT
+            - name: SPRING_R2DBC_URL
+              value: r2dbc:postgresql://${STELLIO_APP_NAME}-postgres/$(STELLIO_SEARCH_DB_DATABASE)
+            - name: SPRING_FLYWAY_URL
+              value: jdbc:postgresql://${STELLIO_APP_NAME}-postgres/$(STELLIO_SEARCH_DB_DATABASE)
+          ports:
+            - containerPort: 8083
+              name: search
+      restartPolicy: Always
+---
+
