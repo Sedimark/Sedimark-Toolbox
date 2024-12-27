@@ -49,6 +49,7 @@ needs!):
 | STELLIO_POSTGRES_PASS | changeme | ✅ |
 | STELLIO_SEARCH_DB | stellio_search | ❌ |
 | STELLIO_SUBSCRIPTION_DB | stellio_subscription | ❌ |
+| STORAGECLASS | nfs-storageclass | ❌ |
 
 Then, apply the Kubernetes manifests:
 

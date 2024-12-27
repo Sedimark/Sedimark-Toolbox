@@ -5,7 +5,7 @@ metadata:
   name: ${STELLIO_APP_NAME}-postgres-data
   namespace: ${STELLIO_NAMESPACE}
 spec:
-  storageClassName: nfs-storageclass
+  storageClassName: ${STORAGECLASS}
   accessModes:
     - ReadWriteOnce
   resources:
