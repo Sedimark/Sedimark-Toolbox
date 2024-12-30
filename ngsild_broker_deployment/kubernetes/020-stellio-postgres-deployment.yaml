@@ -17,7 +17,6 @@ spec:
         app: ${STELLIO_APP_NAME}-postgres
     spec:
       terminationGracePeriodSeconds: 10
-      nodeSelector: {}
       containers:
         - name: ${STELLIO_APP_NAME}-postgres
           image: stellio/stellio-timescale-postgis:${STELLIO_POSTGRES_IMAGETAG}
@@ -28,32 +27,22 @@ spec:
                 configMapKeyRef:
                   name: ${STELLIO_APP_NAME}-config
                   key: POSTGRES_DBNAME
-            - name: STELLIO_SEARCH_DB_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: ${STELLIO_APP_NAME}-config
-                  key: STELLIO_SEARCH_DB_DATABASE
-            - name: STELLIO_SUBSCRIPTION_DB_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: ${STELLIO_APP_NAME}-config
-                  key: STELLIO_SUBSCRIPTION_DB_DATABASE
           envFrom:
             - configMapRef:
                 name: ${STELLIO_APP_NAME}-postgres-config
             - secretRef:
                 name: ${STELLIO_APP_NAME}-secret
-          livenessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - exec pg_isready -U $POSTGRES_USER -h localhost
-            failureThreshold: 6
-            initialDelaySeconds: 30
-            periodSeconds: 30
-            successThreshold: 1
-            timeoutSeconds: 5
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - /bin/sh
+          #       - -c
+          #       - exec pg_isready -U $POSTGRES_USER -h localhost
+          #   failureThreshold: 6
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 30
+          #   successThreshold: 1
+          #   timeoutSeconds: 5
           ports:
             - containerPort: 5432
               name: postgres

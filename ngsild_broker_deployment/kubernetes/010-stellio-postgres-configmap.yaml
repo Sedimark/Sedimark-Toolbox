@@ -7,5 +7,6 @@ metadata:
 data:
   POSTGRES_MULTIPLE_EXTENSIONS: "postgis,timescaledb,pgcrypto"
   ACCEPT_TIMESCALE_TUNING: "TRUE"
+  SHARED_BUFFERS: "300MB"
 ---
 
