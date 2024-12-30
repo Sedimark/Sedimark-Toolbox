@@ -84,9 +84,9 @@ spec:
                   name: ${STELLIO_APP_NAME}-config
                   key: APPLICATION_PAGINATION_TEMPORAL-LIMIT
             - name: SPRING_R2DBC_URL
-              value: r2dbc:postgresql://${STELLIO_APP_NAME}-postgres/$(STELLIO_SEARCH_DB_DATABASE)
+              value: r2dbc:postgresql://${STELLIO_APP_NAME}-postgres.${STELLIO_NAMESPACE}.svc.cluster.local/$(STELLIO_SEARCH_DB_DATABASE)
             - name: SPRING_FLYWAY_URL
-              value: jdbc:postgresql://${STELLIO_APP_NAME}-postgres/$(STELLIO_SEARCH_DB_DATABASE)
+              value: jdbc:postgresql://${STELLIO_APP_NAME}-postgres.${STELLIO_NAMESPACE}.svc.cluster.local/$(STELLIO_SEARCH_DB_DATABASE)
           ports:
             - containerPort: 8083
               name: search

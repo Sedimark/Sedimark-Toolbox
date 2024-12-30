@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app: ${STELLIO_APP_NAME}-api
-  name: api-gateway
+  name: ${STELLIO_APP_NAME}-api
   namespace: ${STELLIO_NAMESPACE}
 spec:
   type: ClusterIP

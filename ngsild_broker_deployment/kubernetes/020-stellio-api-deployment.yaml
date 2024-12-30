@@ -27,6 +27,19 @@ spec:
                 configMapKeyRef:
                   name: ${STELLIO_APP_NAME}-config
                   key: SPRING_PROFILES_ACTIVE
+            - name: APPLICATION_AUTHENTICATION_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: APPLICATION_AUTHENTICATION_ENABLED
+            - name: APPLICATION_SUBSCRIPTION_SERVICE_URL
+              value: ${STELLIO_APP_NAME}-sub.${STELLIO_NAMESPACE}.svc.cluster.local
+            - name: APPLICATION_SEARCH_SERVICE_URL
+              value: ${STELLIO_APP_NAME}-search.${STELLIO_NAMESPACE}.svc.cluster.local
+            - name: JAVA_OPTIONS
+              value: -Dlogging.level.root=DEBUG -Dlogging.level.org.springframework=DEBUG
+            - name: SERVER_COMPRESSION_ENABLED
+              value: "false"
           ports:
             - containerPort: 8080
               name: api-gateway

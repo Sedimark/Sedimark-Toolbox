@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app: ${STELLIO_APP_NAME}-sub
-  name: subscription-service
+  name: ${STELLIO_APP_NAME}-sub
   namespace: ${STELLIO_NAMESPACE}
 spec:
   type: ClusterIP
