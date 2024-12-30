@@ -60,7 +60,7 @@ spec:
           resources: {}
           volumeMounts:
             - name: ${STELLIO_APP_NAME}-postgres-data
-              mountPath: "/var/lib/postgresql/data"
+              mountPath: "/var/lib/postgresql"
       restartPolicy: Always
       volumes:
         - name: ${STELLIO_APP_NAME}-postgres-data
