@@ -26,7 +26,14 @@ spec:
           ports:
             - containerPort: 29092
           resources: {}
+          volumeMounts:
+            - name: ${STELLIO_APP_NAME}-kafka-data
+              mountPath: /var/lib/kafka/data
       hostname: ${STELLIO_APP_NAME}-kafka
       restartPolicy: Always
+      volumes:
+        - name: ${STELLIO_APP_NAME}-kafka-data
+          persistentVolumeClaim:
+            claimName: ${STELLIO_APP_NAME}-kafka-data
 ---
 
