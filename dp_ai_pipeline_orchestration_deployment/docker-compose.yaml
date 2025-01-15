@@ -44,7 +44,7 @@ services:
 
   magic:
     image: mageai/mageai:0.9.74
-    command: mage start ${PROJECT_NAME}
+    command: mage start default_repo
     env_file:
       - ./envs/mage.env
     build:
@@ -52,7 +52,7 @@ services:
       dockerfile: MageAI
     container_name: mage_toolbox
     environment:
-      USER_CODE_PATH: /home/src/${PROJECT_NAME}
+      USER_CODE_PATH: /home/src/default_repo
       ENV: ${ENV}
     ports:
       - 6789:6789

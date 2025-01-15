@@ -1,5 +1,6 @@
 FROM mageai/mageai:0.9.74
 
+ARG PROJECT_NAME=default_repo
 ARG USER_CODE_PATH=/home/src/${PROJECT_NAME}
 
 # Note: this overwrites the requirements.txt file in your new project on first run.
