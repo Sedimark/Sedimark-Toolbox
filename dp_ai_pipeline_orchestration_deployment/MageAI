@@ -1,10 +1,5 @@
-FROM mageai/mageai:0.9.74
+FROM mageai/mageai:latest
 
-ARG PROJECT_NAME=default_repo
-ARG USER_CODE_PATH=/home/src/${PROJECT_NAME}
+COPY requirements.txt /home/src/default_repo/requirements.txt
 
-# Note: this overwrites the requirements.txt file in your new project on first run.
-# You can delete this line for the second run :)
-COPY requirements.txt ${USER_CODE_PATH}/requirements.txt
-
-RUN pip3 install -r ${USER_CODE_PATH}/requirements.txt
+RUN pip3 install -r /home/src/default_repo/requirements.txt
