@@ -22,7 +22,7 @@ services:
     ports:
       - "10100:5432"
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - shared_network
     restart: on-failure
@@ -88,4 +88,7 @@ networks:
 
 volumes:
   minio-data:
+    driver: local
+
+  postgres-data:
     driver: local

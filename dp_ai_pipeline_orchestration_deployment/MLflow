@@ -11,13 +11,9 @@ RUN set -ex \
 
 WORKDIR /server
 
-COPY wait_for_it.sh .
-
-RUN chmod +x ./wait_for_it.sh
-
 EXPOSE 5000
 
-CMD ./wait_for_it.sh postgres:5432 -- mlflow server \
+CMD mlflow server \
     --backend-store-uri postgresql+psycopg2://postgres:postgres@postgres:5432/mlflow_db \
     --default-artifact-root s3://models/ \
     --app-name basic-auth \
