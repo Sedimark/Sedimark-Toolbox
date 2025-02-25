@@ -5,3 +5,5 @@ tzdata==2024.2
 xlrd==2.0.1
 deepdiff
 mlflow
+minio
+# shamrock git+https://github.com/Sedimark/shamrock.git@v3

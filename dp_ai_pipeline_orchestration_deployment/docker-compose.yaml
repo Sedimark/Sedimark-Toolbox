@@ -42,7 +42,6 @@ services:
     command: server /data --console-address ":9001"
 
   magic:
-    image: mageai/mageai:0.9.74
     command: mage start default_repo
     env_file:
       - ./envs/mage.env
