@@ -14,7 +14,7 @@ This repository contains all the necessary files to deploy a working instance of
 ## Architecture Overview
 
 This architecture is composed of several key components that together provide a full-stack solution. The toolbox deploys and links each component, ensuring that they work together seamlessly. A high-level diagram of the architecture is provided below:
-![High Level Architecuter](images/main-architecture.png)
+![High Level Architecuter](images/main-arhitecture.png)
 
 *Each component is described in further detail in the sections below.*
 
