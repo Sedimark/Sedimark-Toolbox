@@ -6,4 +6,7 @@ xlrd==2.0.1
 deepdiff
 mlflow
 minio
+websockets
+xgboost
+lightgbm
 # shamrock git+https://github.com/Sedimark/shamrock.git@v3
