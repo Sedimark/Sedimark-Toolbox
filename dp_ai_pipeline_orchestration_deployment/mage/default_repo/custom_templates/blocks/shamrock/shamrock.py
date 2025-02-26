@@ -38,7 +38,7 @@ class CustomSource(BasePythonSource):
         self.generator = self.topology.fit_generator(self.node)
         self.epoch = 0
         self.metric_name = self.conf["model"]["metrics"][0]
-        self.websocket_url = "ws:mageapi:8000/mage/ws"
+        self.websocket_url = "ws://mageapi:8000/mage/ws"
     
     def save_model_locally(self, model_uri: str):
         response = requests.request("GET", model_uri)
@@ -145,6 +145,7 @@ class CustomSource(BasePythonSource):
                 for success, metric in self.generator:
 
                     if success and metric[self.metric_name] is not None:
+                        active_peers = [peer._address for peer in self.node.active_peers()]
 
                         self.update_queue.put(
                             {
@@ -169,10 +170,9 @@ class CustomSource(BasePythonSource):
                             "pipeline": "<pipeline_name>",
                             "type": "json",
                             "data": self.accuracies,
-                            "done": len(self.past_accuracies) == len(self.accuracies)
+                            "done": self.node._status,
+                            "peers": active_peers
                         }
-
-                        self.past_accuracies = self.accuracies
 
                         self.send_data(send_to_ws)
             except Exception as e:
