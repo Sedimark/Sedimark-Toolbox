@@ -41,6 +41,25 @@ services:
       - "9001:9001"
     command: server /data --console-address ":9001"
 
+  minio-init:
+    image: minio/mc
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    env_file:
+      - ./envs/minio.env
+    depends_on:
+      - minio
+    networks:
+      - shared_network
+    entrypoint: >
+      /bin/sh -c "
+      sleep 30 &&
+      mc config host add local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD &&
+      mc mb local/models || true &&
+      echo 'Initial bucket created'"
+    restart: "no"
+
   magic:
     command: mage start default_repo
     env_file:
@@ -61,6 +80,8 @@ services:
 
   mageapi:
     image: ghcr.io/sedimark/mageapi/mage-api:development
+    depends_on:
+      - magic
     env_file:
       - ./envs/mageapi.env
     container_name: mage_api_toolbox
@@ -81,16 +102,17 @@ services:
       - shared_network
     restart: on-failure:5
 
-  # mlflowapi:
-  #   image: ghcr.io/sedimark/sedimark-orchestration-ui/orchestrator:development
-  #   env_file:
-  #     - ./envs/mlflowapi.env
-  #   container_name: mlflowapi_toolbox
-  #   ports:
-  #     - 8001:8000
-  #   networks:
-  #     - shared_network
-  #   restart: on-failure:5
+  mlflowapi:
+    build:
+      context: ./mlflow_api
+    env_file:
+      - ./envs/mlflowapi.env
+    container_name: mlflowapi_toolbox
+    ports:
+      - 8001:8000
+    networks:
+      - shared_network
+    restart: on-failure:5
 
 networks:
   shared_network:
