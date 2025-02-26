@@ -23,6 +23,7 @@ class CustomSource(BasePythonSource):
         self.update_queue = Queue()
         config_file = get_repo_path() + "/configs/<pipeline_name>/config.yaml"
         self.accuracies = []
+        self.done = False
         self.past_accuracies = self.accuracies
         with open(config_file, 'r') as c:
             self.conf = yaml.safe_load(c)
@@ -175,6 +176,18 @@ class CustomSource(BasePythonSource):
                         }
 
                         self.send_data(send_to_ws)
+
+                if self.node._status != "active" and not self.done:
+                    send_to_ws = {
+                        "pipeline": "<pipeline_name>",
+                        "type": "json",
+                        "data": self.accuracies,
+                        "done": self.node._status,
+                        "peers": active_peers
+                    }
+
+                    self.send_data(send_to_ws)
+                    
             except Exception as e:
                 import traceback
 

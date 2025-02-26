@@ -6,6 +6,7 @@ This Docker Compose setup defines a multi-service environment with components fo
 
 ### 1. **MLflow Server (`mlflow`)**
    - **Purpose**: Hosts the MLflow tracking server for logging and managing ML experiments.
+   - **Application Repository** [MLFlow](https://github.com/mlflow/mlflow)
    - **Build Context**: `.` (current directory), using `MLflow` Dockerfile.
    - **Environment File**: `./envs/mlflow.env`
    - **Ports**: Exposed on port `5000`.
@@ -15,6 +16,7 @@ This Docker Compose setup defines a multi-service environment with components fo
    
 ### 2. **PostgreSQL Database (`postgres`)**
    - **Purpose**: Provides database storage for MLflow metadata.
+   - **Application Repository** [Postgres](https://github.com/postgres/postgres)
    - **Image**: `postgres:latest`
    - **Environment File**: `./envs/postgres.env`
    - **Ports**: Exposed on port `10100` (mapped to PostgreSQL's default `5432`).
@@ -24,6 +26,7 @@ This Docker Compose setup defines a multi-service environment with components fo
 
 ### 3. **MinIO Object Storage (`minio`)**
    - **Purpose**: Object storage for ML artifacts, useful for MLflow experiment logs.
+   - **Application Repository** [Minio](https://github.com/minio/minio)
    - **Image**: `minio/minio:latest`
    - **Environment File**: `./envs/minio.env`
    - **Ports**: Exposed on ports `9000` (API) and `9001` (web console).
@@ -34,6 +37,7 @@ This Docker Compose setup defines a multi-service environment with components fo
 
 ### 4. **MageAI (`magic`)**
    - **Purpose**: Data pipeline tool for data transformation and ML workflows.
+   - **Application Repository** [Mage AI](https://github.com/mage-ai/mage-ai)
    - **Image**: `mageai/mageai:latest`
    - **Environment File**: `./envs/mage.env`
    - **Ports**: Exposed on port `6789`.
@@ -43,17 +47,28 @@ This Docker Compose setup defines a multi-service environment with components fo
 
 ### 5. **Mage API (`mageapi`)**
    - **Purpose**: API service for interacting with MageAI.
-   - **Image**: `ghcr.io/jarcaucristian/mage-api:latest`
+   - **Application Repository**: [Mage API](https://github.com/Sedimark/MageAPI)
+   - **Image**: `ghcr.io/sedimark/mageapi/mage-api:development`
    - **Environment File**: `./envs/mageapi.env`
    - **Ports**: Exposed on port `8000`.
    - **Network**: `shared_network`
    - **Restart Policy**: On failure, up to 5 retries.
 
-### 6. **Orchestrator (`orchestrator`)**
+### 6. **Orchestrator UI (`orchestrator`)**
    - **Purpose**: Manages workflows and tasks across services.
-   - **Image**: `ghcr.io/daniels01ss/orchestrator:latest`
+   - **Application Repository**: [Orchestrator UI](https://github.com/Sedimark/Sedimark-Orchestration-UI)
+   - **Image**: `ghcr.io/sedimark/sedimark-orchestration-ui/orchestrator:development`
    - **Environment File**: `./envs/orchestrator.env`
    - **Ports**: Exposed on port `3000`.
+   - **Network**: `shared_network`
+   - **Restart Policy**: On failure, up to 5 retries.
+
+### 6. **MLFlow API (`mlflowapi`)**
+   - **Purpose**: Communicates with the MLFlow instances in order to provide information about models to the Orchestrator.
+   - **Application Repository**: [MLFlow API](https://github.com/Sedimark/mlflow_api)
+   - **Image**: `ghcr.io/sedimark/mlflow_api/mlflow-api:development`
+   - **Environment File**: `./envs/mlflowapi.env`
+   - **Ports**: Exposed on port `8001`.
    - **Network**: `shared_network`
    - **Restart Policy**: On failure, up to 5 retries.
 
@@ -64,6 +79,7 @@ This Docker Compose setup defines a multi-service environment with components fo
 ## Volumes
 
 - **minio-data**: Local Docker volume for MinIO data persistence.
+- **postgres-data**: Local Docker volume for Postgres data persistence.
 
 ## Usage
 
@@ -83,6 +99,7 @@ This Docker Compose setup defines a multi-service environment with components fo
    - **MageAI**: http://localhost:6789
    - **Mage API**: http://localhost:8000
    - **Orchestrator**: http://localhost:3000
+   - **MLFlow API**: http://localhost:8001
 
 5. **Stopping Services**: Use the following to stop and remove containers:
    ```bash

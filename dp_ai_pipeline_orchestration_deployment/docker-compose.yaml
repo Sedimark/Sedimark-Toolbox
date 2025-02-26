@@ -60,7 +60,7 @@ services:
     restart: on-failure:5
 
   mageapi:
-    image: scr4pp/mageapi
+    image: ghcr.io/sedimark/mageapi/mage-api:development
     env_file:
       - ./envs/mageapi.env
     container_name: mage_api_toolbox
@@ -71,7 +71,7 @@ services:
     restart: on-failure:5
 
   orchestrator:
-    image: scr4pp/orchestratorui
+    image: ghcr.io/sedimark/sedimark-orchestration-ui/orchestrator:development
     env_file:
       - ./envs/orchestrator.env
     container_name: orchestrator_toolbox
@@ -80,6 +80,17 @@ services:
     networks:
       - shared_network
     restart: on-failure:5
+
+  # mlflowapi:
+  #   image: ghcr.io/sedimark/sedimark-orchestration-ui/orchestrator:development
+  #   env_file:
+  #     - ./envs/mlflowapi.env
+  #   container_name: mlflowapi_toolbox
+  #   ports:
+  #     - 8001:8000
+  #   networks:
+  #     - shared_network
+  #   restart: on-failure:5
 
 networks:
   shared_network:
