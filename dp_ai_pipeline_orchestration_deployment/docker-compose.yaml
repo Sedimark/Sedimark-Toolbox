@@ -114,7 +114,7 @@ services:
     depends_on:
       - mlflow
     ports:
-      - 8001:8000
+      - 8001:8001
     networks:
       - shared_network
     restart: on-failure:5
