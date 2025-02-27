@@ -54,7 +54,7 @@ services:
       - shared_network
     entrypoint: >
       /bin/sh -c "
-      sleep 30 &&
+      sleep 5 &&
       mc config host add local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD &&
       mc mb local/models || true &&
       echo 'Initial bucket created'"
@@ -93,6 +93,9 @@ services:
 
   orchestrator:
     image: ghcr.io/sedimark/sedimark-orchestration-ui/orchestrator:development
+    depends_on:
+      - mageapi
+      - mlflowapi
     env_file:
       - ./envs/orchestrator.env
     container_name: orchestrator_toolbox
@@ -108,6 +111,8 @@ services:
     env_file:
       - ./envs/mlflowapi.env
     container_name: mlflowapi_toolbox
+    depends_on:
+      - mlflow
     ports:
       - 8001:8000
     networks:

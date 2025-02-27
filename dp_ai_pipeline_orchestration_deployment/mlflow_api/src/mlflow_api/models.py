@@ -114,11 +114,14 @@ class PytorchModelHandler(BaseModelHandler):
             temp_path = tmp.name
 
         try:
-            torch.jit.save(self.model, temp_path)
+            self.model = torch.jit.script(self.model)
+            self.model.save(temp_path)
             with open(temp_path, 'rb') as f:
                 buffer = io.BytesIO(f.read())
 
             buffer.seek(0)
+        except Exception as e:
+            print(e)
         finally:
             os.remove(temp_path)
 
