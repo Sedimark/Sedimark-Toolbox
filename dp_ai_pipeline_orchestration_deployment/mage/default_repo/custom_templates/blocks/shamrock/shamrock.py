@@ -115,9 +115,10 @@ class CustomSource(BasePythonSource):
         from shamrock.config import Config
         from shamrock.model.builtin import builtin_model
 
-        model_class = builtin_model[self.conf["framework"]][self.conf["model"]["model"]]
-        model = model_class()
-        self.conf["model"]["model"] = model
+        if self.conf["model"].get("model"):
+            model_class = builtin_model[self.conf["framework"]][self.conf["model"]["model"]]
+            model = model_class()
+            self.conf["model"]["model"] = model
 
         from shamrock.utils.condition import (
             BasicStopCondition,
