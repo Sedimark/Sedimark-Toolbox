@@ -23,6 +23,7 @@ class CustomSource(BasePythonSource):
         self.update_queue = Queue()
         config_file = get_repo_path() + "/configs/<pipeline_name>/config.yaml"
         self.accuracies = []
+        self.active_peers = []
         self.done = False
         self.past_accuracies = self.accuracies
         with open(config_file, 'r') as c:
@@ -147,7 +148,7 @@ class CustomSource(BasePythonSource):
                 for success, metric in self.generator:
 
                     if success and metric[self.metric_name] is not None:
-                        active_peers = [peer._address for peer in self.node.active_peers()]
+                        self.active_peers = [peer._address for peer in self.node.active_peers()]
 
                         self.update_queue.put(
                             {
@@ -173,7 +174,7 @@ class CustomSource(BasePythonSource):
                             "type": "json",
                             "data": self.accuracies,
                             "done": self.node._status,
-                            "peers": active_peers
+                            "peers": self.active_peers
                         }
 
                         self.send_data(send_to_ws)
@@ -185,7 +186,7 @@ class CustomSource(BasePythonSource):
                         "type": "json",
                         "data": self.accuracies,
                         "done": self.node._status,
-                        "peers": active_peers
+                        "peers": self.active_peers
                     }
 
                     self.send_data(send_to_ws)
