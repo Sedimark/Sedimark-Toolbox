@@ -179,6 +179,7 @@ class CustomSource(BasePythonSource):
                         self.send_data(send_to_ws)
 
                 if self.node._status != "active" and not self.done:
+                    self.done = True
                     send_to_ws = {
                         "pipeline": "<pipeline_name>",
                         "type": "json",
