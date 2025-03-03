@@ -114,7 +114,9 @@ class PytorchModelHandler(BaseModelHandler):
             temp_path = tmp.name
 
         try:
-            self.model = torch.jit.script(self.model)
+            if not hasattr(self.model, "save"):
+                self.model = torch.jit.script(self.model)
+                
             self.model.save(temp_path)
             with open(temp_path, 'rb') as f:
                 buffer = io.BytesIO(f.read())

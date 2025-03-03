@@ -72,6 +72,7 @@ services:
       USER_CODE_PATH: /home/src/default_repo
     ports:
       - 6789:6789
+      - 8182:8182
     volumes:
       - ./mage/default_repo:/home/src/default_repo
     networks:
@@ -114,7 +115,7 @@ services:
     depends_on:
       - mlflow
     ports:
-      - 8001:8000
+      - 8001:8001
     networks:
       - shared_network
     restart: on-failure:5
