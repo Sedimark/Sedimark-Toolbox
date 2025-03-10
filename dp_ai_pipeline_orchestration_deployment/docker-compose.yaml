@@ -88,7 +88,6 @@ services:
     container_name: mage_api_toolbox
     ports:
       - 8000:8000
-      - 8182:8182
     networks:
       - shared_network
     restart: on-failure:5
@@ -116,7 +115,7 @@ services:
     depends_on:
       - mlflow
     ports:
-      - 8001:8001
+      - 8001:8000
     networks:
       - shared_network
     restart: on-failure:5
