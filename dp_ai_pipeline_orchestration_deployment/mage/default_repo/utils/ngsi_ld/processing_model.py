@@ -1,4 +1,4 @@
-from default_repo.utils.sedimark_demo.data_model import DataSource
+from default_repo.utils.ngsi_ld.data_model import DataSource
 
 class ProcessingStep :
     # A ProcessingStep implements a run method

@@ -17,7 +17,6 @@ def load_data(*args, **kwargs):
     """
     host = os.getenv("NGSI_LD_HOST")
     link_context = os.getenv("NGSI_LD_LINK_CONTEXT")
-    tenant = os.getenv("NGSI_LD_TENANT")
     entity_id = kwargs.get("entity_id")
     load_date = kwargs.get("load_date")
 
@@ -37,7 +36,6 @@ def load_data(*args, **kwargs):
         data_store=stellio_broker, 
         entity_id=bucket['entity_id'],
         context=bucket['link_context'],
-        tenant=tenant,
     )
 
     load_data.run(bucket)

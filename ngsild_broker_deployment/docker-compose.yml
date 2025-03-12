@@ -20,6 +20,8 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_LOG4J_ROOT_LOGLEVEL: INFO
       CLUSTER_ID: ZGE2MTQ4NDk4NGU3NDE2Mm
+    networks:
+      - shared_network
   postgres:
     image: stellio/stellio-timescale-postgis:16-2.16.0-3.3
     container_name: "${CONTAINER_NAME_PREFIX}stellio-postgres"
@@ -39,6 +41,8 @@ services:
       timeout: 5s
       retries: 20
       start_period: 10s
+    networks:
+      - shared_network
   api-gateway:
     container_name: "${CONTAINER_NAME_PREFIX}stellio-api-gateway"
     image: stellio/stellio-api-gateway:${STELLIO_DOCKER_TAG}
@@ -65,6 +69,8 @@ services:
       - APPLICATION_PAGINATION_LIMIT-MAX=${APPLICATION_PAGINATION_LIMIT_MAX}
       - APPLICATION_PAGINATION_TEMPORAL-LIMIT=${APPLICATION_PAGINATION_TEMPORAL_LIMIT}
 
+    networks:
+      - shared_network
     ports:
       - "${SEARCH_SERVICE_PORT:-8083}:8083"
     depends_on:
@@ -96,6 +102,8 @@ services:
         condition: service_healthy
       kafka:
         condition: service_started
+    networks:
+      - shared_network
 
 networks:
   shared_network:
