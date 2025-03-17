@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ${STELLIO_APP_NAME}-kafka
+  name: ${STELLIO_APP_NAME}-kafka
+  namespace: ${STELLIO_NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${STELLIO_APP_NAME}-kafka
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ${STELLIO_APP_NAME}-kafka
+    spec:
+      containers:
+        - image: confluentinc/cp-kafka:${STELLIO_KAFKA_IMAGETAG}
+          name: ${STELLIO_APP_NAME}-kafka
+          envFrom:
+            - configMapRef:
+                name: ${STELLIO_APP_NAME}-kafka-config
+          ports:
+            - containerPort: 29092
+          resources: {}
+          volumeMounts:
+            - name: ${STELLIO_APP_NAME}-kafka-data
+              mountPath: /var/lib/kafka/data
+      hostname: ${STELLIO_APP_NAME}-kafka
+      restartPolicy: Always
+      volumes:
+        - name: ${STELLIO_APP_NAME}-kafka-data
+          persistentVolumeClaim:
+            claimName: ${STELLIO_APP_NAME}-kafka-data
+---
+

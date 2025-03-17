@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ${STELLIO_APP_NAME}-api-gateway
+  name: ${STELLIO_APP_NAME}-api-gateway
+  namespace: ${STELLIO_NAMESPACE}
+spec:
+  selector:
+    matchLabels:
+      app: ${STELLIO_APP_NAME}-api-gateway
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ${STELLIO_APP_NAME}-api-gateway
+    spec:
+      nodeSelector: {}
+      containers:
+        - image: stellio/stellio-api-gateway:${STELLIO_API_IMAGETAG}
+          imagePullPolicy: IfNotPresent
+          name: ${STELLIO_APP_NAME}-api-gateway
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: SPRING_PROFILES_ACTIVE
+            - name: APPLICATION_AUTHENTICATION_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: ${STELLIO_APP_NAME}-config
+                  key: APPLICATION_AUTHENTICATION_ENABLED
+            - name: APPLICATION_SUBSCRIPTION_SERVICE_URL
+              value: ${STELLIO_APP_NAME}-sub.${STELLIO_NAMESPACE}.svc.cluster.local
+            - name: APPLICATION_SEARCH_SERVICE_URL
+              value: ${STELLIO_APP_NAME}-search.${STELLIO_NAMESPACE}.svc.cluster.local
+            - name: JAVA_OPTIONS
+              value: -Dlogging.level.root=DEBUG -Dlogging.level.org.springframework=DEBUG
+            - name: SERVER_COMPRESSION_ENABLED
+              value: "false"
+          ports:
+            - containerPort: 8080
+              name: api-gateway
+          resources: {}
+      restartPolicy: Always
+---
+

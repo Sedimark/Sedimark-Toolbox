@@ -1,0 +1,15 @@
+# https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ${STELLIO_APP_NAME}-postgres-data
+  namespace: ${STELLIO_NAMESPACE}
+spec:
+  storageClassName: ${STORAGECLASS}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+
