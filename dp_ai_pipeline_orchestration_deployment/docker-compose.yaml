@@ -70,12 +70,10 @@ services:
     restart: "no"
 
   magic:
+    image: ghcr.io/sedimark/mage/sedimark-mage:production
     command: mage start default_repo
     env_file:
       - ./envs/mage.env
-    build:
-      context: .
-      dockerfile: MageAI
     container_name: mage_toolbox
     environment:
       USER_CODE_PATH: /home/src/default_repo
