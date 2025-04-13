@@ -123,8 +123,7 @@ services:
     restart: on-failure:10
 
   mlflowapi:
-    build:
-      context: ./mlflow_api
+    image: ghcr.io/sedimark/mlflow_api/mlflow-api:production
     env_file:
       - ./envs/mlflowapi.env
     container_name: mlflowapi_toolbox
