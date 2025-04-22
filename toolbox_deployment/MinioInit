@@ -1,0 +1,9 @@
+FROM minio/mc:latest
+
+WORKDIR /app
+
+COPY init.sh .
+
+RUN chmod +x /app/init.sh
+
+ENTRYPOINT ["/app/init.sh"]

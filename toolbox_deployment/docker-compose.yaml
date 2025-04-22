@@ -1,0 +1,141 @@
+services:
+  mlflow:
+    build:
+      context: .
+      dockerfile: MLflow
+    container_name: mlflow_toolbox
+    env_file:
+      - ./envs/mlflow.env
+    depends_on:
+      mlflow_postgres:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    networks:
+      - shared_network
+    restart: on-failure:10
+
+  mlflow_postgres:
+    image: postgres:latest
+    container_name: mlflow_postgres_toolbox
+    env_file:
+      - ./envs/postgres.env
+    ports:
+      - "10100:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    networks:
+      - shared_network
+    restart: on-failure:10
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio_toolbox
+    env_file:
+      - ./envs/minio.env
+    networks:
+      - shared_network
+    volumes:
+      - minio-data:/data
+    restart: on-failure:10
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+
+  minio-init:
+    build:
+      context: .
+      dockerfile: MinioInit
+    env_file:
+      - ./envs/minio.env
+    depends_on:
+      minio:
+        condition: service_started
+    networks:
+      - shared_network
+    restart: "no"
+
+  magic:
+    image: ghcr.io/sedimark/mage/sedimark-mage:production
+    command: mage start default_repo
+    env_file:
+      - ./envs/mage.env
+    container_name: mage_toolbox
+    environment:
+      USER_CODE_PATH: /home/src/default_repo
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:6789"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    ports:
+      - 6789:6789
+      - 8182:8182
+    volumes:
+      - ./mage/default_repo:/home/src/default_repo
+    networks:
+      - shared_network
+    restart: on-failure:10
+
+  mageapi:
+    image: ghcr.io/sedimark/mageapi/mage-api:development
+    depends_on:
+      magic:
+        condition: service_healthy
+    env_file:
+      - ./envs/mageapi.env
+    container_name: mage_api_toolbox
+    ports:
+      - 8000:8000
+    networks:
+      - shared_network
+    restart: on-failure:10
+
+  orchestrator:
+    image: ghcr.io/sedimark/sedimark-orchestration-ui/orchestrator:development
+    depends_on:
+      mageapi:
+        condition: service_started
+      mlflowapi:
+        condition: service_started
+    env_file:
+      - ./envs/orchestrator.env
+    container_name: orchestrator_toolbox
+    ports:
+      - 3000:3000
+    networks:
+      - shared_network
+    restart: on-failure:10
+
+  mlflowapi:
+    image: ghcr.io/sedimark/mlflow_api/mlflow-api:production
+    env_file:
+      - ./envs/mlflowapi.env
+    container_name: mlflowapi_toolbox
+    depends_on:
+      mlflow:
+          condition: service_started
+    ports:
+      - 8001:8000
+    networks:
+      - shared_network
+    restart: on-failure:10
+
+networks:
+  shared_network:
+    external: true
+
+volumes:
+  minio-data:
+    driver: local
+
+  postgres-data:
+    driver: local
