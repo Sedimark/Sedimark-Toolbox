@@ -1,0 +1,5 @@
+FROM mageai/mageai:latest
+
+COPY requirements.txt /home/src/default_repo/requirements.txt
+
+RUN pip3 install -r /home/src/default_repo/requirements.txt
