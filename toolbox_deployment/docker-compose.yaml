@@ -63,7 +63,7 @@ services:
     restart: "no"
 
   magic:
-    image: ghcr.io/sedimark/mage/sedimark-mage:production
+    image: ghcr.io/sedimark/mage/sedimark-mage:latest
     command: mage start default_repo
     env_file:
       - .env
@@ -84,7 +84,7 @@ services:
     restart: on-failure:10
 
   mageapi:
-    image: ghcr.io/sedimark/mageapi/mage-api:development
+    image: ghcr.io/sedimark/mageapi/mage-api:latest
     depends_on:
       magic:
         condition: service_healthy
@@ -98,7 +98,7 @@ services:
     restart: on-failure:10
 
   orchestrator:
-    image: ghcr.io/sedimark/sedimark-orchestration-ui/orchestrator:development
+    image: ghcr.io/sedimark/sedimark-orchestration-ui/orchestrator:latest
     depends_on:
       mageapi:
         condition: service_started
@@ -114,7 +114,7 @@ services:
     restart: on-failure:10
 
   mlflowapi:
-    image: ghcr.io/sedimark/mlflow_api/mlflow-api:production
+    image: ghcr.io/sedimark/mlflow_api/mlflow-api:latest
     env_file:
       - .env
     container_name: mlflowapi_toolbox
