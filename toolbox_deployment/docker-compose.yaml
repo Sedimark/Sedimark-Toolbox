@@ -92,7 +92,7 @@ services:
       - .env
     container_name: mage_api_toolbox
     ports:
-      - 8000:8000
+      - 8085:8085
     networks:
       - shared_network
     restart: on-failure:10
