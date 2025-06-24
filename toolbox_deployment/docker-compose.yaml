@@ -45,7 +45,7 @@ services:
       - minio-data:/data
     restart: on-failure:10
     ports:
-      - "9000:9000"
+      - "9000:9000" 
       - "9001:9001"
     command: server /data --console-address ":9001"
 
@@ -65,6 +65,8 @@ services:
   magic:
     image: ghcr.io/sedimark/mage/sedimark-mage:latest
     command: mage start default_repo
+    volumes:
+      - ./default_repo:/home/src/default_repo
     env_file:
       - .env
     container_name: mage_toolbox
