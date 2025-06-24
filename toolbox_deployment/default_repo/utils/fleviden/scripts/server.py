@@ -23,7 +23,7 @@ def load_config(config_path: str) -> Dict[str, Any]:
     with open(config_path, 'r') as file:
         return yaml.safe_load(file)
 
-def setup_server_pods(config: Dict[str, Any]) -> None:
+def setup_server_pods(config: Dict[str, Any], model_path: str) -> None:
     """
     Setup and configure all pods based on the configuration
     """
@@ -37,7 +37,6 @@ def setup_server_pods(config: Dict[str, Any]) -> None:
     server_id = server_config['ID']
     clients = server_config.get('CLIENTS', [])
     min_clients = server_config['MIN_CLIENTS']
-    model_path = server_config['MODEL_PATH']
     data_path = server_config['DATA_PATH']
     features = server_config['FEATURES']
     targets = server_config['TARGETS']
@@ -107,11 +106,25 @@ def parse_arguments():
     """
     parser = argparse.ArgumentParser(description='Fleviden Server Configuration')
     parser.add_argument(
-        '--config', 
-        type=str, 
+        '--config',
+        type=str,
         required=True,
         help='Path to the configuration YAML file'
     )
+    parser.add_argument(
+        '--model_path',
+        type=str,
+        required=True,
+        help='Path to the model file'
+    )
+
+     parser.add_argument(
+        '--data_path',
+        type=str,
+        required=True,
+        help='Path to the model file'
+    )
+
     return parser.parse_args()
 
 def main():
@@ -124,8 +137,8 @@ def main():
     # Load configuration
     config = load_config(args.config)
     
-    # Setup pods
-    setup_server_pods(config)
+    # Setup pods with the model_path argument
+    setup_server_pods(config, args.model_path, args.data_path)
     
     # Start fleviden
     Pod.start()

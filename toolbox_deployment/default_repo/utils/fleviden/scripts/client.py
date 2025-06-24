@@ -20,7 +20,7 @@ def load_config(config_path: str) -> Dict[str, Any]:
     with open(config_path, 'r') as file:
         return yaml.safe_load(file)
 
-def setup_client_pods(config: Dict[str, Any]) -> None:
+def setup_client_pods(config: Dict[str, Any], model_path: str, model_path: str) -> None:
     """
     Setup and configure all pods based on the configuration
     """
@@ -29,13 +29,12 @@ def setup_client_pods(config: Dict[str, Any]) -> None:
     verbose = config.get('VERBOSITY', 0)
     rounds = config.get('ROUNDS', 10)
 
-    # Extract client specific configuration
+    # Extract client-specific configuration
     client_config = config['client']
     client_id = client_config['ID']
     server = client_config['SERVER']
     epochs = client_config['EPOCHS']
     batch_size = client_config['BATCH_SIZE']
-    model_path = client_config['MODEL_PATH']
     data_path = client_config['DATA_PATH']
     features = client_config['FEATURES']
     targets = client_config['TARGETS']
@@ -51,7 +50,12 @@ def setup_client_pods(config: Dict[str, Any]) -> None:
         batch_size=batch_size,
         send_gradients=False
     )
-    pod_csv = CSV(filepath=data_path, features=features, targets=targets, pd_args=pd_args)
+    pod_csv = CSV(
+        filepath=data_path,
+        features=features,
+        targets=targets,
+        pd_args=pd_args
+    )
     pod_http = HTTP(client_id)
 
     # Flow control pods
@@ -102,10 +106,22 @@ def parse_arguments():
     """
     parser = argparse.ArgumentParser(description='Fleviden Client Configuration')
     parser.add_argument(
-        '--config', 
-        type=str, 
+        '--config',
+        type=str,
         required=True,
         help='Path to the configuration YAML file'
+    )
+    parser.add_argument(
+        '--model_path',
+        type=str,
+        required=True,
+        help='Path to the model file'
+    )
+    parser.add_argument(
+        '--data_path',
+        type=str,
+        required=True,
+        help='Path to the model file'
     )
     return parser.parse_args()
 
@@ -115,13 +131,13 @@ def main():
     """
     # Parse command line arguments
     args = parse_arguments()
-    
+
     # Load configuration
     config = load_config(args.config)
-    
-    # Setup pods
-    setup_client_pods(config)
-    
+
+    # Setup pods with the model_path argument
+    setup_client_pods(config, args.model_path, args.data_path)
+
     # Start fleviden
     Pod.start()
 

@@ -2,6 +2,8 @@ description: '{
 
   "type": "data_models"
 
+  "description" : "Anomaly annotator pipeline"
+
   }'
 name: 'Basic Template '
 pipeline:
@@ -36,7 +38,7 @@ pipeline:
         - data_preprocessing
         type: python
         uuid: anomaly_annotator
-      updated_at: 1750052797.608048
+      updated_at: 1750659620.545837
     - added_at: null
       pipeline:
         created_at: '2023-09-19 11:10:36.692226+00:00'
@@ -49,7 +51,7 @@ pipeline:
         tags: []
         type: python
         uuid: mlflow_train_test
-      updated_at: 1750052797.608402
+      updated_at: 1750659620.547539
     - added_at: null
       pipeline:
         created_at: '2024-09-23 19:31:56.239782+00:00'
@@ -59,7 +61,7 @@ pipeline:
         tags: []
         type: python
         uuid: surrey
-      updated_at: 1750052797.610597
+      updated_at: 1750659620.554213
     retry_config: {}
     status: executed
     tags: []
@@ -96,7 +98,7 @@ pipeline:
         - data_preprocessing
         type: python
         uuid: anomaly_annotator
-      updated_at: 1750052797.608159
+      updated_at: 1750659620.546483
     retry_config: {}
     status: executed
     tags: []
@@ -128,7 +130,7 @@ pipeline:
         - data_preprocessing
         type: python
         uuid: anomaly_annotator
-      updated_at: 1750052797.608247
+      updated_at: 1750659620.54682
     retry_config: {}
     status: failed
     tags: []

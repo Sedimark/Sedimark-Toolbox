@@ -18,6 +18,9 @@ class SubprocessSource(BasePythonSource):
         self.process_server = None
         self.process_client = None
         self.config_file = get_repo_path() + "/configs/<pipeline_name>/config.yaml"
+        self.model_config = get_repo_path() + "/utils/fleviden/model/model.keras"
+        self.server_dataset_file = get_repo_path() + "/utils/fleviden/data/server/iot.csv"
+        self.client_dataset_file = get_repo_path() + "/utils/fleviden/data/client_one/iot.csv"
 
     def clean_output(self, line: str) -> dict:
         """
@@ -32,7 +35,12 @@ class SubprocessSource(BasePythonSource):
         try:
             # Start server process
             self.process_server = subprocess.Popen(
-                ['python3.11', "/home/src/default_repo/utils/fleviden/scripts/server.py", "--config", self.config_file],
+                [
+                'python3.11', "/home/src/default_repo/utils/fleviden/scripts/server.py",
+                "--config", self.config_file, 
+                "--model_path", self.model_config,
+                "--data_path", self.server_dataset_file
+                ],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
@@ -41,7 +49,12 @@ class SubprocessSource(BasePythonSource):
 
             # Start client process
             self.process_client = subprocess.Popen(
-                ['python3.11', "/home/src/default_repo/utils/fleviden/scripts/client.py", "--config", self.config_file],
+                [
+                 'python3.11', "/home/src/default_repo/utils/fleviden/scripts/client.py",
+                 "--config", self.config_file,
+                 "--model_path", self.model_config,
+                 "--data_path", self.client_dataset_file
+                 ],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
