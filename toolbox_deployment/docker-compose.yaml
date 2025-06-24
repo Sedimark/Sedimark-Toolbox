@@ -65,8 +65,6 @@ services:
   magic:
     image: ghcr.io/sedimark/mage/sedimark-mage:latest
     command: mage start default_repo
-    volumes:
-      - ./default_repo:/home/src/default_repo
     env_file:
       - .env
     container_name: mage_toolbox
