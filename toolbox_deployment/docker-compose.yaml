@@ -64,18 +64,17 @@ services:
 
   magic:
     image: ghcr.io/sedimark/mage/sedimark-mage:latest
-    command: mage start default_repo
     env_file:
       - .env
     container_name: mage_toolbox
     environment:
       USER_CODE_PATH: /home/src/default_repo
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:6789"]
-      interval: 10s
+      test: ["CMD-SHELL", "curl -f http://localhost:6789 || exit 1"]
+      interval: 30s
       timeout: 5s
-      retries: 20
-      start_period: 10s
+      retries: 5
+      start_period: 25m
     ports:
       - 6789:6789
       - 8182:8182
@@ -95,7 +94,7 @@ services:
       - 8085:8085
     networks:
       - shared_network
-    restart: on-failure:10
+    restart: on-failure
 
   orchestrator:
     image: ghcr.io/sedimark/sedimark-orchestration-ui/orchestrator:latest

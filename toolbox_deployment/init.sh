@@ -2,7 +2,7 @@
 
 sleep 5
 
-if mc alias set local http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD; then
+if mc alias set local http://minio:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"; then
   echo 'Host added successfully!'
 else
   echo 'Host not added successfully!'
@@ -14,4 +14,3 @@ if mc mb local/models; then
 else
   echo 'Initial bucket not created'
 fi
-
